@@ -28,5 +28,8 @@ $CONFIG = array(
 
 	//Whether or not to contact minecraft.net to get an unknown cape
 	'getcape'	=> true
+
+	//Whether or not to contact minecraft.net to authenticate an unknown user
+	'onlineauth'	=> false
 );
 ?>
