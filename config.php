@@ -27,9 +27,12 @@ $CONFIG = array(
 	'getskin'	=> true,
 
 	//Whether or not to contact minecraft.net to get an unknown cape
-	'getcape'	=> true
+	'getcape'	=> true,
 
 	//Whether or not to contact minecraft.net to authenticate an unknown user
-	'onlineauth'	=> false
+	'onlineauth'	=> false,
+
+	//Whether or not to allow users to change their username
+	'changeuser'	=> false
 );
 ?>

@@ -37,20 +37,25 @@ if(isset($_SESSION['user'])) {
 </div>
 <p>
 <?php
-	if(/*!empty($_REQUEST['newuser']) || */!empty($_REQUEST['newpassword'])) {
+	if(($CONFIG['changeuser'] && !empty($_REQUEST['newuser'])) || !empty($_REQUEST['newpassword'])) {
 		$mysql = mysql_connect($CONFIG['server'], $CONFIG['user'], $CONFIG['pass']);
 		mysql_select_db($CONFIG['database'], $mysql);
 
 		$error = false;
 		$query = '';
-		/*if(!empty($_REQUEST['newuser'])) {
+		if($CONFIG['changeuser'] && !empty($_REQUEST['newuser'])) {
+			if(!isset($_REQUEST['password']) || $_REQUEST['password'] == '') {
+				$error = true;
+				echo '<span class="failure">Error: Please enter your current password.</span><br />';
+			}
+
 			$result = mysql_query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . mysql_real_escape_string($_REQUEST['newuser']) . '"');
 			if(mysql_num_rows($result) != 0) {
 				$error=true;
 				echo '<span class="failure">Error: Username already registered.</span><br />';
 			}
 			$query = 'username="' . mysql_real_escape_string($_REQUEST['newuser']) . '"';
-		}*/
+		}
 		if(!empty($_REQUEST['newpassword'])) {
 			if(!isset($_REQUEST['password']) || $_REQUEST['password'] == '') {
 				$error = true;
@@ -70,6 +75,8 @@ if(isset($_SESSION['user'])) {
 			$result = mysql_query('UPDATE ' . $CONFIG['table'] . ' SET ' . $query . ' WHERE username="' . mysql_real_escape_string($_SESSION['user']) . '" AND password="' . mysql_real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
 			if(mysql_affected_rows() == 1) {
 				echo '<span class="success">Successfully updated.</span><br />';
+				if(isset($_REQUEST['newuser']))
+					$_SESSION['user'] = $_REQUEST['newuser'];
 			}
 			else {
 				echo '<span class="failure">Error: Wrong password.</span><br />';
@@ -100,7 +107,7 @@ if(isset($_SESSION['user'])) {
 	if(isset($_REQUEST['removeskin'])) {
 		if(file_exists('skins/' . addslashes($_SESSION['user']) . '.png')) {
 			unlink('skins/' . addslashes($_SESSION['user']) . '.png');
-			echo '<span class="success">Skin successfully updated.</span><br />';
+			echo '<span class="success">Skin successfully removed.</span><br />';
 		}
 		else {
 			echo '<span class="failure">Error: You must have a skin to remove it.</span><br />';
@@ -112,10 +119,10 @@ if(isset($_SESSION['user'])) {
 <table>
 <tr>
 <td><label for="newuser">Username: </label></td>
-<td><input id="newuser" name="newuser" type="text" value="<?php echo $_SESSION['user']; ?>" disabled="disabled" /></td>
+<td><input id="newuser" name="newuser" type="text" value="<?php echo $_SESSION['user']; ?>"<?php echo $CONFIG['changeuser'] ? '' : ' disabled="disabled"'; ?> /></td>
 </tr>
 <tr>
-<td><label for="password">Current Password: </label><br /></td>
+<td><label for="password">Current Password: </label><br />Only if changing username or password.</td>
 <td><input id="password" name="password" type="password" /></td>
 </tr>
 <tr>
