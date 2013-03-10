@@ -75,8 +75,13 @@ if(isset($_SESSION['user'])) {
 			$result = mysql_query('UPDATE ' . $CONFIG['table'] . ' SET ' . $query . ' WHERE username="' . mysql_real_escape_string($_SESSION['user']) . '" AND password="' . mysql_real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
 			if(mysql_affected_rows() == 1) {
 				echo '<span class="success">Successfully updated.</span><br />';
-				if(isset($_REQUEST['newuser']))
+				if(isset($_REQUEST['newuser'])) {
+					if(file_exists('skins/' . addslashes($_SESSION['user']) . '.png'))
+						rename('skins/' . addslashes($_SESSION['user']) . '.png', 'skins/' . addslashes($_REQUEST['newuser']) . '.png');
+					if(file_exists('capes/' . addslashes($_SESSION['user']) . '.png'))
+						rename('capes/' . addslashes($_SESSION['user']) . '.png', 'capes/' . addslashes($_REQUEST['newuser']) . '.png');
 					$_SESSION['user'] = $_REQUEST['newuser'];
+				}
 			}
 			else {
 				echo '<span class="failure">Error: Wrong password.</span><br />';
@@ -122,7 +127,7 @@ if(isset($_SESSION['user'])) {
 <td><input id="newuser" name="newuser" type="text" value="<?php echo $_SESSION['user']; ?>"<?php echo $CONFIG['changeuser'] ? '' : ' disabled="disabled"'; ?> /></td>
 </tr>
 <tr>
-<td><label for="password">Current Password: </label><br />Only if changing username or password.</td>
+<td><label for="password">Current Password: </label><br />Only if changing<?php echo $CONFIG['changeuser'] ? ' username or' : ''; ?> password.</td>
 <td><input id="password" name="password" type="password" /></td>
 </tr>
 <tr>
