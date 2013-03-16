@@ -20,7 +20,7 @@ $CONFIG = array(
 
 	//Folder where the player's .dat files are stored
 	//The script will not move the .dat file after someone renames themselves if this field is blank
-	//Supports FTP (ftp://username:password@address) and SFTP (ssh2.sftp://username:password@address) connections assuming they are enabled on the php server
+	//Supports FTP (ftp://username:password@address) and SFTP (ssh2.sftp://username:password@address:22) connections assuming they are enabled on the php server
 	'playerdata'	=> '/home/minecraft/world/players',
 
 	//Message to display when not accessed as an authenticator; can use HTML
