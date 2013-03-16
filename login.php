@@ -80,6 +80,8 @@ if(isset($_SESSION['user'])) {
 						rename('skins/' . addslashes($_SESSION['user']) . '.png', 'skins/' . addslashes($_REQUEST['newuser']) . '.png');
 					if(file_exists('capes/' . addslashes($_SESSION['user']) . '.png'))
 						rename('capes/' . addslashes($_SESSION['user']) . '.png', 'capes/' . addslashes($_REQUEST['newuser']) . '.png');
+					if($CONFIG['playerdata'] != '' && file_exists($CONFIG['playerdata'] . '/' . addslashes($_SESSION['user']) . '.dat'))
+						rename($CONFIG['playerdata'] . '/' . addslashes($_SESSION['user']) . '.dat', $CONFIG['playerdata'] . '/' . addslashes($_REQUEST['newuser']) . '.dat');
 					$_SESSION['user'] = $_REQUEST['newuser'];
 				}
 			}

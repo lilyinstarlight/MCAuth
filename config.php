@@ -15,12 +15,15 @@ $CONFIG = array(
 	'database'	=> 'database',
 
 	//Table containing the login information
+	//Table format:   id (int, AI)   username (varchar, 31)   password (char, 64)   session (char, 8)   server (varchar, 16)
 	'table'		=> 'minecraft',
-	/*Table format:
-		id (int, AI)	username (varchar, 31)	password (char, 64)	session (char, 8)	server (varchar, 16)
-	*/
 
-	//Message to display when not accessed as an authenticator, can use HTML
+	//Folder where the player's .dat files are stored
+	//The script will not move the .dat file after someone renames themselves if this field is blank
+	//Supports FTP (ftp://username:password@address) and SFTP (ssh2.sftp://username:password@address) connections assuming they are enabled on the php server
+	'playerdata'	=> '/home/minecraft/world/players',
+
+	//Message to display when not accessed as an authenticator; can use HTML
 	'message'	=> 'Welcome',
 
 	//Whether or not to contact minecraft.net to get an unknown skin
