@@ -12,6 +12,7 @@ require 'config.php';
 
 if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['passwordConfirm'])) {
 	$error = false;
+
 	if($_REQUEST['user'] == '') {
 		$error = true;
 		echo '<span class="failure">Error: Please enter a username.</span><br />';
@@ -39,15 +40,17 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['
 			echo '<span class="failure">Error: Skin file must be 64px by 32px.</span><br />';
 		}
 	}
-	$mysql = mysql_connect($CONFIG['server'], $CONFIG['user'], $CONFIG['pass']);
-	mysql_select_db($CONFIG['database'], $mysql);
-	$result = mysql_query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . mysql_real_escape_string($_REQUEST['user']) . '"');
-	if(mysql_num_rows($result) != 0) {
+	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
+	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '"');
+	if($result->num_rows != 0) {
 		$error=true;
 		echo '<span class="failure">Error: Username already registered.</span><br />';
 	}
+
+	$result->close();
+
 	if(!$error) {
-		$result = mysql_query('INSERT INTO ' . $CONFIG['table'] . ' (username, password) VALUES("' . mysql_real_escape_string($_REQUEST['user']) . '", "' . mysql_real_escape_string(hash('sha256', $_REQUEST['password'])) . '")');
+		$result = $mysql->query('INSERT INTO ' . $CONFIG['table'] . ' (username, password) VALUES("' . $mysql->real_escape_string($_REQUEST['user']) . '", "' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '")');
 		if($result == true) {
 			if(file_exists($_FILES['skin']['tmp_name'])) {
 				move_uploaded_file($_FILES['skin']['tmp_name'], 'skins/' . addslashes($_REQUEST['user']) . '.png');
@@ -57,8 +60,11 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['
 		else {
 			echo '<span class="failure">Error: Could not add user to database.</span><br />';
 		}
+
+		$result->close();
 	}
-	mysql_close($mysql);
+
+	$mysql->close();
 }
 ?>
 </p>

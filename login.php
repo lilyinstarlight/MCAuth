@@ -11,16 +11,17 @@ require 'config.php';
 
 session_start();
 if(!isset($_SESSION['user']) && isset($_REQUEST['user'])) {
-	$mysql = mysql_connect($CONFIG['server'], $CONFIG['user'], $CONFIG['pass']);
-	mysql_select_db($CONFIG['database'], $mysql);
-	$result = mysql_query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . mysql_real_escape_string($_REQUEST['user']) . '" AND password="' . mysql_real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-	if(mysql_num_rows($result) == 1) {
+	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
+	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
+	if($result->num_rows == 1) {
 		$_SESSION['user'] = $_REQUEST['user'];
 	}
 	else {
 		echo '<span class="failure">Error: Wrong password.</span><br />';
 	}
-	mysql_close($mysql);
+
+	$result->close();
+	$mysql->close();
 }
 if(isset($_REQUEST['logout'])) {
 	unset($_SESSION['user']);
@@ -38,23 +39,24 @@ if(isset($_SESSION['user'])) {
 <p>
 <?php
 	if(($CONFIG['changeuser'] && !empty($_REQUEST['newuser'])) || !empty($_REQUEST['newpassword'])) {
-		$mysql = mysql_connect($CONFIG['server'], $CONFIG['user'], $CONFIG['pass']);
-		mysql_select_db($CONFIG['database'], $mysql);
-
+		$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 		$error = false;
 		$query = '';
+
 		if($CONFIG['changeuser'] && !empty($_REQUEST['newuser'])) {
 			if(!isset($_REQUEST['password']) || $_REQUEST['password'] == '') {
 				$error = true;
 				echo '<span class="failure">Error: Please enter your current password.</span><br />';
 			}
 
-			$result = mysql_query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . mysql_real_escape_string($_REQUEST['newuser']) . '"');
-			if(mysql_num_rows($result) != 0) {
+			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['newuser']) . '"');
+			if($result->num_rows != 0) {
 				$error=true;
 				echo '<span class="failure">Error: Username already registered.</span><br />';
 			}
-			$query = 'username="' . mysql_real_escape_string($_REQUEST['newuser']) . '"';
+			$query = 'username="' . $mysql->real_escape_string($_REQUEST['newuser']) . '"';
+
+			$result->close();
 		}
 		if(!empty($_REQUEST['newpassword'])) {
 			if(!isset($_REQUEST['password']) || $_REQUEST['password'] == '') {
@@ -69,18 +71,18 @@ if(isset($_SESSION['user'])) {
 				$error = true;
 				echo '<span class="failure">Error: Password unchanged</span><br />';
 			}
-			$query = (empty($query) ? '' : $query . ' AND ') . 'password="' . mysql_real_escape_string(hash('sha256', $_REQUEST['newpassword'])) . '"';
+			$query = (empty($query) ? '' : $query . ' AND ') . 'password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['newpassword'])) . '"';
 		}
 		if(!$error) {
-			$result = mysql_query('UPDATE ' . $CONFIG['table'] . ' SET ' . $query . ' WHERE username="' . mysql_real_escape_string($_SESSION['user']) . '" AND password="' . mysql_real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-			if(mysql_affected_rows() == 1) {
+			$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET ' . $query . ' WHERE username="' . $mysql->real_escape_string($_SESSION['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
+			if($mysql->affected_rows == 1) {
 				echo '<span class="success">Successfully updated.</span><br />';
 				if(isset($_REQUEST['newuser'])) {
 					if(file_exists('skins/' . addslashes($_SESSION['user']) . '.png'))
 						rename('skins/' . addslashes($_SESSION['user']) . '.png', 'skins/' . addslashes($_REQUEST['newuser']) . '.png');
 					if(file_exists('capes/' . addslashes($_SESSION['user']) . '.png'))
 						rename('capes/' . addslashes($_SESSION['user']) . '.png', 'capes/' . addslashes($_REQUEST['newuser']) . '.png');
-					if($CONFIG['playerdata'] != '' && file_exists($CONFIG['playerdata'] . '/' . addslashes($_SESSION['user']) . '.dat'))
+					if($CONFIG['playerdata'] !== '' && file_exists($CONFIG['playerdata'] . '/' . addslashes($_SESSION['user']) . '.dat'))
 						rename($CONFIG['playerdata'] . '/' . addslashes($_SESSION['user']) . '.dat', $CONFIG['playerdata'] . '/' . addslashes($_REQUEST['newuser']) . '.dat');
 					$_SESSION['user'] = $_REQUEST['newuser'];
 				}
@@ -89,7 +91,8 @@ if(isset($_SESSION['user'])) {
 				echo '<span class="failure">Error: Wrong password.</span><br />';
 			}
 		}
-		mysql_close($mysql);
+
+		$mysql->close();
 	}
 	if(isset($_FILES['skin']) && file_exists($_FILES['skin']['tmp_name'])) {
 		$error = false;

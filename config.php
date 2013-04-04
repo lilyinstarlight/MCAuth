@@ -2,8 +2,8 @@
 $CONFIG = array(
 	//Database information
 
-	//Server address, use localhost if unsure
-	'server'	=> 'localhost',
+	//MySQL host address, use localhost if unsure
+	'host'		=> 'localhost',
 
 	//Username for database
 	'user'		=> 'root',
