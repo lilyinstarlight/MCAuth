@@ -13,7 +13,16 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 		} while($result->num_rows != 0);
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $id . '" WHERE id=' . $array['id']);
 
-		echo '1363862534000' . ':' . 'deprecated' . ':' . $array['username'] . ':' . $id . ':';
+		$rss = @file_get_contents('http://mcupdate.tumblr.com/rss');
+		if(!empty($rss)) {
+			preg_match('/<pubDate>(.*?)<\\/pubDate>/', $rss, $match);
+			$version = strtotime($match[1]) * 1000;
+		}
+		else {
+			$version = strtotime($CONFIG['version']) * 1000;
+		}
+
+		echo $version . ':' . 'deprecated' . ':' . $array['username'] . ':' . $id . ':';
 	}
 	else if($CONFIG['onlineauth'] && isset($_REQUEST['version'])) {
 		echo file_get_contents('http://login.minecraft.net/?user=' . $_REQUEST['user'] . '&password=' . $_REQUEST['password'] . '&version=' . $_REQUEST['version']);

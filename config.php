@@ -36,6 +36,10 @@ $CONFIG = array(
 	'onlineauth'	=> false,
 
 	//Whether or not to allow users to change their username
-	'changeuser'	=> false
+	'changeuser'	=> false,
+
+	//Fallback Minecraft release date if the service cannot connect to mcupdate.tumblr.com
+	//If your server cannot access mcupdate.tumblr.com, update this to the date minecraft updates based on mcupdate.tumblr.com
+	'version'	=> 'Thu, 21 Mar 2013 06:44:40 -0400'
 );
 ?>
