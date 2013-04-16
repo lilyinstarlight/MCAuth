@@ -4,7 +4,7 @@ require 'config.php';
 if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST['serverId'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND session="' . $mysql->real_escape_string($_REQUEST['sessionId']) . '"');
-	if($result->num_rows == 1) {
+	if($result->num_rows === 1) {
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET server="' . $mysql->real_escape_string($_REQUEST['serverId']) . '" WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND session="' . $mysql->real_escape_string($_REQUEST['sessionId']) . '"');
 		echo 'OK';
 	}

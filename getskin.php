@@ -13,17 +13,17 @@ if(isset($_REQUEST['user'])) {
 			$size = $headers['Content-Length'];
 		}
 		else {
-			$filename = 'steve.png';
+			$filename = 'char.png';
 			$size = filesize($filename);
 		}
 	}
 	else {
-		$filename = 'steve.png';
+		$filename = 'char.png';
 		$size = filesize($filename);
 	}
 
 	header('Content-Type: image/png');
-	header('Content-Length:' . $size);
+	header('Content-Length: ' . $size);
 	header('Content-Disposition: attachment;filename="' . $_REQUEST['user'] . '.png"');
 	$file=fopen($filename, 'r');
 	fpassthru($file);

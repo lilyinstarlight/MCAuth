@@ -21,7 +21,7 @@ if(isset($_REQUEST['user'])) {
 	}
 
 	header('Content-Type: image/png');
-	header('Content-Length:' . $size);
+	header('Content-Length: ' . $size);
 	header('Content-Disposition: attachment;filename="' . $_REQUEST['user'] . '.png"');
 	$file=fopen($filename, 'r');
 	fpassthru($file);

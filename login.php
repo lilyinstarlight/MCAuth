@@ -13,11 +13,11 @@ session_start();
 if(!isset($_SESSION['user']) && isset($_REQUEST['user'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-	if($result->num_rows == 1) {
+	if($result->num_rows === 1) {
 		$_SESSION['user'] = $_REQUEST['user'];
 	}
 	else {
-		echo '<span class="failure">Error: Wrong password.</span><br />';
+		echo '<p><span class="failure">Error: Wrong password.</span><br /></p>';
 	}
 
 	$result->close();
@@ -44,13 +44,13 @@ if(isset($_SESSION['user'])) {
 		$query = '';
 
 		if($CONFIG['changeuser'] && !empty($_REQUEST['newuser'])) {
-			if(!isset($_REQUEST['password']) || $_REQUEST['password'] == '') {
+			if(!isset($_REQUEST['password']) || $_REQUEST['password'] === '') {
 				$error = true;
 				echo '<span class="failure">Error: Please enter your current password.</span><br />';
 			}
 
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['newuser']) . '"');
-			if($result->num_rows != 0) {
+			if($result->num_rows !== 0) {
 				$error=true;
 				echo '<span class="failure">Error: Username already registered.</span><br />';
 			}
@@ -59,15 +59,15 @@ if(isset($_SESSION['user'])) {
 			$result->close();
 		}
 		if(!empty($_REQUEST['newpassword'])) {
-			if(!isset($_REQUEST['password']) || $_REQUEST['password'] == '') {
+			if(!isset($_REQUEST['password']) || $_REQUEST['password'] === '') {
 				$error = true;
 				echo '<span class="failure">Error: Please enter your current password.</span><br />';
 			}
-			if($_REQUEST['newpassword'] != $_REQUEST['newpasswordConfirm']) {
+			if($_REQUEST['newpassword'] !== $_REQUEST['newpasswordConfirm']) {
 				$error = true;
 				echo '<span class="failure">Error: Passwords did not match.</span><br />';
 			}
-			if(isset($_REQUEST['password']) && $_REQUEST['password'] == $_REQUEST['newpassword']) {
+			if(isset($_REQUEST['password']) && $_REQUEST['password'] === $_REQUEST['newpassword']) {
 				$error = true;
 				echo '<span class="failure">Error: Password unchanged</span><br />';
 			}
@@ -75,7 +75,7 @@ if(isset($_SESSION['user'])) {
 		}
 		if(!$error) {
 			$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET ' . $query . ' WHERE username="' . $mysql->real_escape_string($_SESSION['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-			if($mysql->affected_rows == 1) {
+			if($mysql->affected_rows === 1) {
 				echo '<span class="success">Successfully updated.</span><br />';
 				if(isset($_REQUEST['newuser'])) {
 					if(file_exists('skins/' . addslashes($_SESSION['user']) . '.png'))
@@ -100,12 +100,12 @@ if(isset($_SESSION['user'])) {
 			$error=true;
 			echo '<span class="failure">Error: Skin size is too big.  Must be less than 2 MB.</span><br />';
 		}
-		if($_FILES['skin']['type'] != 'image/png') {
+		if($_FILES['skin']['type'] !== 'image/png') {
 			$error=true;
 			echo '<span class="failure">Error: Skin file must be in PNG format.</span><br />';
 		}
 		list($width, $height) = getimagesize($_FILES['skin']['tmp_name']);
-		if($width != 64 || $height != 32) {
+		if($width !== 64 || $height !== 32) {
 			$error=true;
 			echo '<span class="failure">Error: Skin file must be 64px by 32px.</span><br />';
 		}

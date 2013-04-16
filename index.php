@@ -4,7 +4,7 @@ require 'config.php';
 if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-	if($result->num_rows == 1) {
+	if($result->num_rows === 1) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
 		do {
 			$result->close();
