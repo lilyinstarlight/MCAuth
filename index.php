@@ -13,8 +13,8 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 		} while($result->num_rows != 0);
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $id . '" WHERE id=' . $array['id']);
 
-		$rss = @file_get_contents('http://mcupdate.tumblr.com/rss');
-		if(!empty($rss)) {
+		if(empty($CONFIG['version'])) {
+			$rss = @file_get_contents('http://mcupdate.tumblr.com/rss');
 			preg_match('/<pubDate>(.*?)<\\/pubDate>/', $rss, $match);
 			$version = strtotime($match[1]) * 1000;
 		}
