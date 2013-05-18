@@ -25,7 +25,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 		echo $version . ':' . 'deprecated' . ':' . $array['username'] . ':' . $id . ':';
 	}
 	else if($CONFIG['onlineauth'] && isset($_REQUEST['version'])) {
-		echo file_get_contents('http://login.minecraft.net/?user=' . $_REQUEST['user'] . '&password=' . $_REQUEST['password'] . '&version=' . $_REQUEST['version']);
+		echo file_get_contents('http://login.minecraft.net/?user=' . urlencode($_REQUEST['user']) . '&password=' . urlencode($_REQUEST['password']) . '&version=' . $_REQUEST['version']);
 	}
 	else {
 		echo 'Bad login';

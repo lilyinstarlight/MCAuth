@@ -9,7 +9,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST[
 		echo 'OK';
 	}
 	else if($CONFIG['onlineauth']) {
-		echo file_get_contents('http://session.minecraft.net/game/joinserver.jsp?user=' . $_REQUEST['user'] . '&sessionId=' . $_REQUEST['sessionId'] . '&serverId=' . $_REQUEST['serverId']);
+		echo file_get_contents('http://session.minecraft.net/game/joinserver.jsp?user=' . urlencode($_REQUEST['user']) . '&sessionId=' . $_REQUEST['sessionId'] . '&serverId=' . $_REQUEST['serverId']);
 	}
 	else {
 		echo 'Bad login';
