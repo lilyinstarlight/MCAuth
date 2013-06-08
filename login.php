@@ -14,7 +14,8 @@ if(!isset($_SESSION['user']) && isset($_REQUEST['user'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
 	if($result->num_rows === 1) {
-		$_SESSION['user'] = $_REQUEST['user'];
+		$array = $result->fetch_array(MYSQLI_ASSOC);
+		$_SESSION['user'] = $array['username'];
 	}
 	else {
 		echo '<p><span class="failure">Error: Wrong password.</span><br /></p>';
