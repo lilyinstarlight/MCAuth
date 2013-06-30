@@ -173,7 +173,7 @@ else {
 </tr>
 <tr>
 <td></td>
-<td><br /><input name="submit" type="submit" value="Submit"/></td>
+<td><br /><input name="submit" type="submit" value="Submit" /></td>
 </tr>
 </table>
 </form>
