@@ -10,13 +10,14 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 			$result->close();
 			$id = dechex(rand(268435456, 4294967295));
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE session="' . $id . '"');
-		} while($result->num_rows != 0);
+		}
+		while($result->num_rows != 0);
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $id . '" WHERE id=' . $array['id']);
 
 		if(empty($CONFIG['version'])) {
 			$rss = @file_get_contents('http://mcupdate.tumblr.com/rss');
-			preg_match('/<pubDate>(.*?)<\\/pubDate>/', $rss, $match);
-			$version = @strtotime($match[1]) * 1000;
+			preg_match('/<item>.*?<title>Minecraft [0-9]\\.[0-9](\\.[0-9])?<\\/title>.*?<pubDate>(.*?)<\\/pubDate>.*?<\\/item>/s', $rss, $match);
+			$version = @strtotime($match[2]) * 1000;
 		}
 		else {
 			$version = strtotime($CONFIG['version']) * 1000;
