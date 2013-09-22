@@ -1,6 +1,6 @@
 MCAuth
 ======
 
-This is an alternative to the Minecraft.net user authentication system.  It is similar to services such as Mineshafter, but this version can also check Minecraft.net to get skins, capes, or to authenticate an unknown user.  This compliments my modified Technic Launcher that can authenticate with and proxy Minecraft to this clone.
+MCAuth is an alternative to the Minecraft.net user authentication system.  It supports the old legacy authentication (pre-1.6) and the new Yggdrasil authentication.  It can optionally contact minecraft.net for unknown logins, skins, and capes.  This compliments MineProxy and my modified Technic Launcher that can proxy Minecraft to this clone.
 
 Licensed under the MIT License; see `LICENSE.txt` for more details.
