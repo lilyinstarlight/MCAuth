@@ -13,12 +13,12 @@ if(isset($_REQUEST['user'])) {
 			$size = $headers['Content-Length'];
 		}
 		else {
-			$filename = 'char.png';
+			$filename = 'steve.png';
 			$size = filesize($filename);
 		}
 	}
 	else {
-		$filename = 'char.png';
+		$filename = 'steve.png';
 		$size = filesize($filename);
 	}
 

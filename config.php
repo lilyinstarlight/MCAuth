@@ -15,7 +15,7 @@ $CONFIG = array(
 	'database'	=> 'database',
 
 	//Table containing the login information
-	//Table format: id (int, AI)   username (varchar, 31)   password (char, 64)   session (char, 8)   server (varchar, 41)
+	//Table format: id (int, AI)   username (varchar, 31)   password (char, 64)   token (char, 8)   client (char, 36)   session (char, 8)   server (varchar, 41)
 	'table'		=> 'minecraft',
 
 	//Folder where the player's .dat files are stored
@@ -32,12 +32,13 @@ $CONFIG = array(
 	//Whether or not to contact minecraft.net to get an unknown cape
 	'getcape'	=> true,
 
-	//Whether or not to contact minecraft.net to authenticate an unknown user
+	//Whether or not to contact authserver.mojang.com to authenticate an unknown user
 	'onlineauth'	=> false,
 
 	//Whether or not to allow users to change their username
 	'changeuser'	=> false,
 
+	//Only for pre-1.6 clients
 	//Fallback Minecraft release date
 	//The script will not contact mcupdate.tumblr.com to check the current minecraft version if this field is set
 	'version'	=> ''
