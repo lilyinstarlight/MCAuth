@@ -27,16 +27,16 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['
 	}
 	if(!$error && file_exists($_FILES['skin']['tmp_name'])) {
 		if($_FILES['skin']['size'] > 2097152) {
-			$error=true;
+			$error = true;
 			echo '<span class="failure">Error: Skin size is too big.  Must be less than 2 MB.</span><br />';
 		}
 		if($_FILES['skin']['type'] !== 'image/png') {
-			$error=true;
+			$error = true;
 			echo '<span class="failure">Error: Skin file must be in PNG format.</span><br />';
 		}
 		list($width, $height) = getimagesize($_FILES['skin']['tmp_name']);
 		if($width !== 64 || $height !== 32) {
-			$error=true;
+			$error = true;
 			echo '<span class="failure">Error: Skin file must be 64px by 32px.</span><br />';
 		}
 	}
@@ -44,7 +44,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '"');
 	if($result->num_rows !== 0) {
-		$error=true;
+		$error = true;
 		echo '<span class="failure">Error: Username already registered.</span><br />';
 	}
 
