@@ -18,7 +18,7 @@ if(!isset($_SESSION['user']) && isset($_REQUEST['user'])) {
 		$_SESSION['user'] = $array['username'];
 	}
 	else {
-		echo '<p><span class="failure">Error: Wrong password.</span><br /></p>';
+		echo '<p><span class="failure">Error: Wrong username and/or password.</span><br /></p>';
 	}
 
 	$result->close();
