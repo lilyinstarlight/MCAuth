@@ -4,7 +4,7 @@ require 'config.php';
 $input = file_get_contents('php://input');
 $json = json_decode($input, true);
 
-if(isset($json['user']) && isset($json['password']) && isset($json['clientToken'])) {
+if(isset($json['username']) && isset($json['password']) && isset($json['clientToken'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($json['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $json['password'])) . '"');
 	if($result->num_rows === 1) {
