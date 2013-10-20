@@ -30,7 +30,7 @@ if(isset($json['accessToken']) && isset($json['clientToken'])) {
 		echo file_get_contents('https://authserver.mojang.com/refresh', false, stream_context_create(array(
 			'http' => array(
 				'method' => 'POST',
-				'header' => 'Content-Type: application/json' + "\r\n",
+				'header' => 'Content-Type: application/json',
 				'content' => $input
 			)
 		)));

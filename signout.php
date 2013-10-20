@@ -17,7 +17,7 @@ if(isset($json['username']) && isset($json['password']) && isset($json['clientTo
 		echo file_get_contents('https://authserver.mojang.com/authenticate', false, stream_context_create(array(
 			'http' => array(
 				'method' => 'POST',
-				'header' => 'Content-Type: application/json' + "\r\n",
+				'header' => 'Content-Type: application/json',
 				'content' => $input
 			)
 		)));
