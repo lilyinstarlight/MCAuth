@@ -9,7 +9,7 @@ if(isset($json['accessToken']) && isset($json['clientToken'])) {
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $mysql->real_escape_string($json['accessToken']) . '" AND client_token="' . $mysql->real_escape_string($json['clientToken']) . '"');
 	if($result->num_rows === 1) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
-		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="" AND client_token="" WHERE id=' . $array['id']);
+		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="", client_token="" WHERE id=' . $array['id']);
 
 		echo json_encode();
 	}
