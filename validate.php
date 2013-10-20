@@ -4,9 +4,9 @@ require 'config.php';
 $input = file_get_contents('php://input');
 $json = json_decode($input, true);
 
-if(isset($json['accessToken']) && isset($json['clientToken'])) {
+if(isset($json['accessToken'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
-	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE accesstoken="' . $mysql->real_escape_string($json['accessToken']) . '" AND clientoken="' . $mysql->real_escape_string($json['clientToken']) . '"');
+	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE accesstoken="' . $mysql->real_escape_string($json['accessToken']) . '"');
 	if($result->num_rows === 1) {
 		echo json_encode();
 	}
