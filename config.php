@@ -15,7 +15,7 @@ $CONFIG = array(
 	'database'	=> 'database',
 
 	//Table containing the login information
-	//Table format: id (int, AI)   username (varchar, 31)   password (char, 64)   token (char, 8)   client (char, 36)   session (char, 8)   server (varchar, 41)
+	//Table format: id (int, AI)   username (varchar, 31)   password (char, 64)   access_token (char, 8)   client_token (char, 36)   session (char, 8)   server (varchar, 41)
 	'table'		=> 'minecraft',
 
 	//Folder where the player's .dat files are stored

@@ -11,14 +11,14 @@ if(isset($json['username']) && isset($json['password']) && isset($json['clientTo
 		$array = $result->fetch_array(MYSQLI_ASSOC);
 		do {
 			$result->close();
-			$accesstoken = dechex(rand(268435456, 4294967295));
-			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE accesstoken="' . $accesstoken . '"');
+			$access_token = dechex(rand(268435456, 4294967295));
+			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $access_token . '"');
 		}
 		while($result->num_rows != 0);
-		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET accesstoken="' . $accesstoken . '" AND clienttoken="' . $mysql->real_escape_string($json['clientToken']) . '" WHERE id=' . $array['id']);
+		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '" AND client_token="' . $mysql->real_escape_string($json['clientToken']) . '" WHERE id=' . $array['id']);
 
 		echo json_encode(array(
-			'accessToken' => $accesstoken,
+			'accessToken' => $access_token,
 			'clientToken' => $json['clientToken'],
 			'selectedProfile' => array(
 				'id' => $array['id'],

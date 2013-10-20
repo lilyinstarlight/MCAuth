@@ -6,7 +6,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST[
 
 	$session = explode(':', $_REQUEST['sessionId'], 3);
 	if(count($session) === 3 && $session[0] === 'token')
-		$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND accesstoken="' . $mysql->real_escape_string($session[1]) . '" AND id="' . $mysql->real_escape_string($session[2]) . '"');
+		$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND access_token="' . $mysql->real_escape_string($session[1]) . '" AND id="' . $mysql->real_escape_string($session[2]) . '"');
 	else
 		$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND session="' . $mysql->real_escape_string($_REQUEST['sessionId']) . '"');
 
