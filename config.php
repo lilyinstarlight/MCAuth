@@ -1,7 +1,5 @@
 <?php
 $CONFIG = array(
-	//Database information
-
 	//MySQL host address, use localhost if unsure
 	'host'		=> 'localhost',
 
@@ -18,13 +16,8 @@ $CONFIG = array(
 	//Table format: id (int, AI)   username (varchar, 31)   password (char, 64)   access_token (char, 8)   client_token (char, 36)   session (char, 8)   server (varchar, 41)
 	'table'		=> 'minecraft',
 
-	//Folder where the player's .dat files are stored
-	//The script will not move the .dat file after someone renames themselves if this field is blank
-	//Supports FTP (ftp://username:password@address) and SFTP (ssh2.sftp://username:password@address:22) connections assuming they are enabled on the php server
-	'playerdata'	=> '/home/minecraft/world/players',
-
 	//Message to display when not accessed as an authenticator; can use HTML
-	'message'	=> 'Welcome',
+	'message'	=> 'Welcome to the MCAuth authentication server.  To register yourself, go to <a href="register.php">Register</a>.  To change your skin or information, go to <a href="login.php">Login</a>.',
 
 	//Whether or not to contact minecraft.net to get an unknown skin
 	'getskin'	=> true,
@@ -37,6 +30,11 @@ $CONFIG = array(
 
 	//Whether or not to allow users to change their username
 	'changeuser'	=> false,
+
+	//Folder where the player's .dat files are stored
+	//If changeuser is true and this field is set, it will move the player's .dat files to keep their items and location when they change names
+	//Supports FTP (ftp://username:password@address) and SFTP (ssh2.sftp://username:password@address:22) connections assuming they are enabled on the php server
+	'playerdata'	=> '/home/minecraft/world/players',
 
 	//Only for pre-1.6 clients
 	//Fallback Minecraft release date
