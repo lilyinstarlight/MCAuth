@@ -4,17 +4,17 @@ require 'config.php';
 $input = file_get_contents('php://input');
 $json = json_decode($input, true);
 
-if(isset($json['accessToken']) && isset($json['clientToken'])) {
+if(isset($json['accessToken'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
-	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $mysql->real_escape_string($json['accessToken']) . '" AND client_token="' . $mysql->real_escape_string($json['clientToken']) . '"');
+	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $mysql->real_escape_string($json['accessToken']) . '"');
 	if($result !== FALSE) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
 		$result->close();
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="", client_token="" WHERE id=' . $array['id']);
 
-		echo json_encode();
+		http_response_code(204);
 	}
 	else if($CONFIG['onlineauth']) {
 		$mojang = file_get_contents('https://authserver.mojang.com/invalidate', false, stream_context_create(array(
@@ -31,10 +31,7 @@ if(isset($json['accessToken']) && isset($json['clientToken'])) {
 		echo $mojang;
 	}
 	else {
-		echo json_encode(array(
-			'error' => 'ForbiddenOperationException',
-			'errorMessage' => 'Invalid token.'
-		));
+		http_response_code(204);
 	}
 
 	$mysql->close();

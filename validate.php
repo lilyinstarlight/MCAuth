@@ -11,7 +11,7 @@ if(isset($json['accessToken'])) {
 	if($result !== FALSE) {
 		$result->close();
 
-		echo json_encode();
+		http_response_code(204);
 	}
 	else if($CONFIG['onlineauth']) {
 		$mojang = file_get_contents('https://authserver.mojang.com/validate', false, stream_context_create(array(
@@ -28,9 +28,10 @@ if(isset($json['accessToken'])) {
 		echo $mojang;
 	}
 	else {
+		http_response_code(403);
 		echo json_encode(array(
 			'error' => 'ForbiddenOperationException',
-			'errorMessage' => 'Invalid token.'
+			'errorMessage' => 'Invalid token'
 		));
 	}
 

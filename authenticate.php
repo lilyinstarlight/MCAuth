@@ -23,17 +23,7 @@ if(isset($json['username']) && isset($json['password']) && isset($json['clientTo
 
 		echo json_encode(array(
 			'accessToken' => $access_token,
-			'clientToken' => $json['clientToken'],
-			'selectedProfile' => array(
-				'id' => $array['id'],
-				'name' => $array['username']
-			),
-			'availableProfiles' => array(
-				array(
-					'id' => $array['id'],
-					'name' => $array['username']
-				)
-			)
+			'clientToken' => $json['clientToken']
 		));
 	}
 	else if($CONFIG['onlineauth']) {
@@ -51,6 +41,7 @@ if(isset($json['username']) && isset($json['password']) && isset($json['clientTo
 		echo $mojang;
 	}
 	else {
+		http_response_code(403);
 		echo json_encode(array(
 			'error' => 'ForbiddenOperationException',
 			'errorMessage' => 'Invalid credentials. Invalid username or password.'
