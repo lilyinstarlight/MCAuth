@@ -19,7 +19,4 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['serverId'])) {
 
 	$mysql->close();
 }
-else {
-	echo $CONFIG['message'];
-}
 ?>

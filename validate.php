@@ -4,7 +4,14 @@ require 'config.php';
 $input = file_get_contents('php://input');
 $json = json_decode($input, true);
 
-if(isset($json['accessToken'])) {
+if($json === NULL) {
+	http_response_code(400);
+	echo json_encode(array(
+		'error' => 'JsonParseException',
+		'errorMessage' => 'Error parsing JSON.'
+	));
+}
+else if(isset($json['accessToken'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $mysql->real_escape_string($json['accessToken']) . '"');
@@ -38,6 +45,10 @@ if(isset($json['accessToken'])) {
 	$mysql->close();
 }
 else {
-	echo $CONFIG['message'];
+	http_response_code(400);
+	echo json_encode(array(
+		'error' => 'IllegalArgumentException',
+		'errorMessage' => 'Access Token can not be null or empty.'
+	));
 }
 ?>

@@ -26,7 +26,4 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST[
 
 	$mysql->close();
 }
-else {
-	echo $CONFIG['message'];
-}
 ?>
