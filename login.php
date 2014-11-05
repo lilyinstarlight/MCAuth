@@ -14,7 +14,7 @@ if(!isset($_SESSION['user']) && isset($_REQUEST['user'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-	if($result !== FALSE) {
+	if($result !== false) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
 		$result->close();
 
@@ -53,7 +53,7 @@ if(isset($_SESSION['user'])) {
 
 		if($CONFIG['changeuser'] && !empty($_REQUEST['newuser'])) {
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['newuser']) . '"');
-			if($result !== FALSE) {
+			if($result !== false) {
 				$result->close();
 
 				$error = true;
@@ -78,7 +78,7 @@ if(isset($_SESSION['user'])) {
 		if(!$error) {
 			$result = $mysql->query('UPDATE ' . $CONFIG['table'] . ' SET ' . $query . ' WHERE username="' . $mysql->real_escape_string($_SESSION['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
 
-			if($result === TRUE) {
+			if($result === true) {
 				echo '<span class="success">Successfully updated</span><br />';
 
 				if(isset($_REQUEST['newuser'])) {

@@ -7,7 +7,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['serverId'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND server="' . $mysql->real_escape_string($_REQUEST['serverId']) . '"');
-	if($result !== FALSE) {
+	if($result !== false) {
 		$result->close();
 
 		echo 'YES';
