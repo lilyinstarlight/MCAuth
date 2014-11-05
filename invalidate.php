@@ -35,7 +35,7 @@ else if(isset($json['accessToken'])) {
 			)
 		)));
 
-		http_response_code(intval($http_response_header.split(' ')[1]));
+		http_response_code(intval(explode(' ', $http_response_header)[1]));
 		if(http_response_code() !== 204)
 			header('Content-Type: application/json');
 		echo $mojang;
