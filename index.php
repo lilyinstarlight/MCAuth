@@ -7,19 +7,15 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-	if($result !== false) {
+	if($result->num_rows === 1) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
-		$result->close();
 
-		while(true) {
-			$id = dechex(rand(268435456, 4294967295));
-			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE session="' . $id . '"');
-
-			if($result === false)
-				break;
-
-			$result->close();
+		do {
+			$result->free();
+			$access_token = dechex(rand(268435456, 4294967295));
+			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $access_token . '"');
 		}
+		while($result->num_rows !== 0);
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $id . '" WHERE id=' . $array['id']);
 
@@ -40,6 +36,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 	else {
 		echo 'Bad login';
 	}
+	$result->free();
 
 	$mysql->close();
 }

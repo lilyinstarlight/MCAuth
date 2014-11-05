@@ -11,10 +11,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST[
 		$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND access_token="' . $mysql->real_escape_string($session[1]) . '" AND id="' . $mysql->real_escape_string($session[2]) . '"');
 	else
 		$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND session="' . $mysql->real_escape_string($_REQUEST['sessionId']) . '"');
-
-	if($result !== false) {
-		$result->close();
-
+	if($result->num_rows === 1) {
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET server="' . $mysql->real_escape_string($_REQUEST['serverId']) . '" WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '"');
 
 		echo 'OK';
@@ -25,6 +22,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST[
 	else {
 		echo 'Bad login';
 	}
+	$result->free();
 
 	$mysql->close();
 }

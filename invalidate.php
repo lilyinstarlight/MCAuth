@@ -16,9 +16,8 @@ else if(isset($json['accessToken'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $mysql->real_escape_string($json['accessToken']) . '"');
-	if($result !== false) {
+	if($result->num_rows === 1) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
-		$result->close();
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="", client_token="" WHERE id=' . $array['id']);
 
@@ -43,6 +42,7 @@ else if(isset($json['accessToken'])) {
 	else {
 		http_response_code(204);
 	}
+	$result->free();
 
 	$mysql->close();
 }

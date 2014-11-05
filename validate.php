@@ -16,9 +16,7 @@ else if(isset($json['accessToken'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $mysql->real_escape_string($json['accessToken']) . '"');
-	if($result !== false) {
-		$result->close();
-
+	if($result->num_rows === 1) {
 		http_response_code(204);
 	}
 	else if($CONFIG['onlineauth']) {
@@ -45,6 +43,7 @@ else if(isset($json['accessToken'])) {
 			'errorMessage' => 'Invalid token'
 		));
 	}
+	$result->free();
 
 	$mysql->close();
 }

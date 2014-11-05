@@ -44,12 +44,11 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '"');
-	if($result !== false) {
-		$result->close();
-
+	if($result->num_rows === 1) {
 		$error = true;
 		echo '<span class="failure">Error: Username already registered</span><br />';
 	}
+	$result->free();
 
 	if(!$error) {
 		$result = $mysql->query('INSERT INTO ' . $CONFIG['table'] . ' (username, password) VALUES("' . $mysql->real_escape_string($_REQUEST['user']) . '", "' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '")');

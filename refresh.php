@@ -16,20 +16,15 @@ else if(isset($json['accessToken'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $mysql->real_escape_string($json['accessToken']) . '"');
-	if($result !== false) {
+	if($result->num_rows === 1) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
-		$result->close();
 
-		while(true) {
+		do {
+			$result->free();
 			$access_token = dechex(rand(268435456, 4294967295));
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $access_token . '"');
-
-			if($result === false)
-				break;
-
-			$result->close();
 		}
-
+		while($result->num_rows !== 0);
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '" WHERE id=' . $array['id']);
 
@@ -70,6 +65,7 @@ else if(isset($json['accessToken'])) {
 			'errorMessage' => 'Invalid token.'
 		));
 	}
+	$result->free();
 
 	$mysql->close();
 }
