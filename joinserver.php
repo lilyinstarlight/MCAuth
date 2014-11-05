@@ -10,8 +10,11 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST[
 	else
 		$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND session="' . $mysql->real_escape_string($_REQUEST['sessionId']) . '"');
 
-	if($result->num_rows === 1) {
+	if($result !== FALSE) {
+		$result->close();
+
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET server="' . $mysql->real_escape_string($_REQUEST['serverId']) . '" WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '"');
+
 		echo 'OK';
 	}
 	else if($CONFIG['onlineauth']) {
@@ -21,7 +24,6 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST[
 		echo 'Bad login';
 	}
 
-	$result->close();
 	$mysql->close();
 }
 else {

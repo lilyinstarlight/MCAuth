@@ -17,7 +17,7 @@ $CONFIG = array(
 	'table'		=> 'minecraft',
 
 	//Message to display when not accessed as an authenticator; can use HTML
-	'message'	=> 'Welcome to the MCAuth authentication server.  To register yourself, go to <a href="register.php">Register</a>.  To change your skin or information, go to <a href="login.php">Login</a>.',
+	'message'	=> '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>MCAuth</title><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><link href="common.css" rel="stylesheet" type="text/css" /></head><body><p>Welcome to the MCAuth authentication server. To register yourself, go to <a href="register.php">Register</a>. To change your skin or information, go to <a href="login.php">Login</a>.</p></body></html>',
 
 	//Whether or not to contact minecraft.net to get an unknown skin
 	'getskin'	=> true,

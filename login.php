@@ -12,16 +12,18 @@ require 'config.php';
 session_start();
 if(!isset($_SESSION['user']) && isset($_REQUEST['user'])) {
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
+
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-	if($result->num_rows === 1) {
+	if($result !== FALSE) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
+		$result->close();
+
 		$_SESSION['user'] = $array['username'];
 	}
 	else {
-		echo '<p><span class="failure">Error: Wrong username and/or password.</span><br /></p>';
+		echo '<p><span class="failure">Error: Wrong username and/or password</span><br /></p>';
 	}
 
-	$result->close();
 	$mysql->close();
 }
 if(isset($_REQUEST['logout'])) {
@@ -44,40 +46,41 @@ if(isset($_SESSION['user'])) {
 		$error = false;
 		$query = '';
 
+		if(!isset($_REQUEST['password']) || $_REQUEST['password'] === '') {
+			$error = true;
+			echo '<span class="failure">Error: Enter your current password</span><br />';
+		}
+
 		if($CONFIG['changeuser'] && !empty($_REQUEST['newuser'])) {
-			if(!isset($_REQUEST['password']) || $_REQUEST['password'] === '') {
-				$error = true;
-				echo '<span class="failure">Error: Please enter your current password.</span><br />';
-			}
-
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['newuser']) . '"');
-			if($result->num_rows !== 0) {
-				$error=true;
-				echo '<span class="failure">Error: Username already registered.</span><br />';
-			}
-			$query = 'username="' . $mysql->real_escape_string($_REQUEST['newuser']) . '"';
+			if($result !== FALSE) {
+				$result->close();
 
-			$result->close();
+				$error = true;
+				echo '<span class="failure">Error: Username already registered</span><br />';
+			}
+
+			$query = 'username="' . $mysql->real_escape_string($_REQUEST['newuser']) . '"';
 		}
 		if(!empty($_REQUEST['newpassword'])) {
-			if(!isset($_REQUEST['password']) || $_REQUEST['password'] === '') {
+			if($_REQUEST['newpassword'] !== $_REQUEST['newpasswordconfirm']) {
 				$error = true;
-				echo '<span class="failure">Error: Please enter your current password.</span><br />';
-			}
-			if($_REQUEST['newpassword'] !== $_REQUEST['newpasswordConfirm']) {
-				$error = true;
-				echo '<span class="failure">Error: Passwords did not match.</span><br />';
+				echo '<span class="failure">Error: Passwords do not match</span><br />';
 			}
 			if(isset($_REQUEST['password']) && $_REQUEST['password'] === $_REQUEST['newpassword']) {
 				$error = true;
 				echo '<span class="failure">Error: Password unchanged</span><br />';
 			}
+
 			$query = (empty($query) ? '' : $query . ' AND ') . 'password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['newpassword'])) . '"';
 		}
+
 		if(!$error) {
-			$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET ' . $query . ' WHERE username="' . $mysql->real_escape_string($_SESSION['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
-			if($mysql->affected_rows === 1) {
-				echo '<span class="success">Successfully updated.</span><br />';
+			$result = $mysql->query('UPDATE ' . $CONFIG['table'] . ' SET ' . $query . ' WHERE username="' . $mysql->real_escape_string($_SESSION['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
+
+			if($result === TRUE) {
+				echo '<span class="success">Successfully updated</span><br />';
+
 				if(isset($_REQUEST['newuser'])) {
 					if(file_exists('skins/' . addslashes($_SESSION['user']) . '.png'))
 						rename('skins/' . addslashes($_SESSION['user']) . '.png', 'skins/' . addslashes($_REQUEST['newuser']) . '.png');
@@ -89,7 +92,7 @@ if(isset($_SESSION['user'])) {
 				}
 			}
 			else {
-				echo '<span class="failure">Error: Wrong password.</span><br />';
+				echo '<span class="failure">Error: Wrong password</span><br />';
 			}
 		}
 
@@ -98,30 +101,32 @@ if(isset($_SESSION['user'])) {
 	if(isset($_FILES['skin']) && file_exists($_FILES['skin']['tmp_name'])) {
 		$error = false;
 		if($_FILES['skin']['size'] > 2097152) {
-			$error=true;
-			echo '<span class="failure">Error: Skin size is too big.  Must be less than 2 MB.</span><br />';
+			$error = true;
+			echo '<span class="failure">Error: Skin size is too big: must be less than 2 MB</span><br />';
 		}
 		if($_FILES['skin']['type'] !== 'image/png') {
-			$error=true;
-			echo '<span class="failure">Error: Skin file must be in PNG format.</span><br />';
+			$error = true;
+			echo '<span class="failure">Error: Skin file must be in PNG format</span><br />';
 		}
 		list($width, $height) = getimagesize($_FILES['skin']['tmp_name']);
 		if($width !== 64 || $height !== 32) {
-			$error=true;
-			echo '<span class="failure">Error: Skin file must be 64px by 32px.</span><br />';
+			$error = true;
+			echo '<span class="failure">Error: Skin file must be 64px by 32px</span><br />';
 		}
 		if(!$error) {
 			move_uploaded_file($_FILES['skin']['tmp_name'], 'skins/' . addslashes($_SESSION['user']) . '.png');
-			echo '<span class="success">Skin successfully updated.</span><br />';
+
+			echo '<span class="success">Skin successfully updated</span><br />';
 		}
 	}
 	if(isset($_REQUEST['removeskin'])) {
 		if(file_exists('skins/' . addslashes($_SESSION['user']) . '.png')) {
 			unlink('skins/' . addslashes($_SESSION['user']) . '.png');
-			echo '<span class="success">Skin successfully removed.</span><br />';
+
+			echo '<span class="success">Skin successfully removed</span><br />';
 		}
 		else {
-			echo '<span class="failure">Error: You must have a skin to remove it.</span><br />';
+			echo '<span class="failure">Error: No skin to remove</span><br />';
 		}
 	}
 ?>
@@ -141,8 +146,8 @@ if(isset($_SESSION['user'])) {
 <td><input id="newpassword" name="newpassword" type="password" /></td>
 </tr>
 <tr>
-<td><label for="newpasswordConfirm">Confirm Password: </label></td>
-<td><input id="newpasswordConfirm" name="newpasswordConfirm" type="password" /></td>
+<td><label for="newpasswordconfirm">Confirm Password: </label></td>
+<td><input id="newpasswordconfirm" name="newpasswordconfirm" type="password" /></td>
 </tr>
 <tr>
 <td><label for="skin">Skin File: </label><input name="MAX_FILE_SIZE" type="hidden" value="2097152" /></td>

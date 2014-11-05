@@ -22,7 +22,7 @@ if(isset($_REQUEST['user'])) {
 
 	header('Content-Type: application/octet-stream');
 	header('Content-Length: ' . $size);
-	$file=fopen($filename, 'r');
+	$file = fopen($filename, 'r');
 	fpassthru($file);
 	fclose($file);
 }
