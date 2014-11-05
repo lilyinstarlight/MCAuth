@@ -17,7 +17,6 @@ if(isset($json['accessToken'])) {
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $access_token . '"');
 		}
 		while($result !== FALSE);
-		$result->close();
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '" WHERE id=' . $array['id']);
 

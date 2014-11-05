@@ -14,7 +14,6 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE session="' . $id . '"');
 		}
 		while($result !== FALSE);
-		$result->close();
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $id . '" WHERE id=' . $array['id']);
 

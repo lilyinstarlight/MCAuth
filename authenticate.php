@@ -17,7 +17,6 @@ if(isset($json['username']) && isset($json['password']) && isset($json['clientTo
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $access_token . '"');
 		}
 		while($result !== FALSE);
-		$result->close();
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '", client_token="' . $mysql->real_escape_string($json['clientToken']) . '" WHERE id=' . $array['id']);
 
