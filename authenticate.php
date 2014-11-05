@@ -65,7 +65,7 @@ else if(isset($json['username']) && isset($json['password'])) {
 			)
 		)));
 
-		http_response_code(intval(explode(' ', $http_response_header)[1]));
+		http_response_code(intval(explode(' ', $http_response_header[0], 3)[1]));
 		header('Content-Type: application/json');
 		echo $mojang;
 	}
