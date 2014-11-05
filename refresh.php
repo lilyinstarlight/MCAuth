@@ -31,13 +31,18 @@ if(isset($json['accessToken']) && isset($json['clientToken'])) {
 		));
 	}
 	else if($CONFIG['onlineauth']) {
-		echo file_get_contents('https://authserver.mojang.com/refresh', false, stream_context_create(array(
+		$mojang = file_get_contents('https://authserver.mojang.com/refresh', false, stream_context_create(array(
 			'http' => array(
+				'ignore_errors' => TRUE,
 				'method' => 'POST',
-				'header' => 'Content-Type: application/json',
+				'header' => 'Content-Type: application/json'    . "\r\n" .
+				            'Content-Length: ' . strlen($input) . "\r\n",
 				'content' => $input
 			)
 		)));
+
+		http_response_code(intval($http_response_header.split(' ')[1]));
+		echo $mojang;
 	}
 	else {
 		echo json_encode(array(
