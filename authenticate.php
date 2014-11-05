@@ -20,10 +20,18 @@ if(isset($json['username']) && isset($json['password']) && isset($json['clientTo
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '", client_token="' . $mysql->real_escape_string($json['clientToken']) . '" WHERE id=' . $array['id']);
 
-		echo json_encode(array(
+		$response = array(
 			'accessToken' => $access_token,
 			'clientToken' => $json['clientToken']
-		));
+		);
+
+		if(isset($json['requestUser']) && $json['requestUser'] === TRUE) {
+			$response['user'] = array(
+				'id' => $array['id']
+			);
+		}
+
+		echo json_encode($response);
 	}
 	else if($CONFIG['onlineauth']) {
 		$mojang = file_get_contents('https://authserver.mojang.com/authenticate', false, stream_context_create(array(
