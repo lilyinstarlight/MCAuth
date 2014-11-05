@@ -6,6 +6,7 @@ $json = json_decode($input, true);
 
 if($json === NULL) {
 	http_response_code(400);
+	header('Content-Type: application/json');
 	echo json_encode(array(
 		'error' => 'JsonParseException',
 		'errorMessage' => 'Error parsing JSON.'
@@ -38,6 +39,7 @@ else if(isset($json['username']) && isset($json['password']) && isset($json['cli
 			);
 		}
 
+		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
 	else if($CONFIG['onlineauth']) {
@@ -52,10 +54,12 @@ else if(isset($json['username']) && isset($json['password']) && isset($json['cli
 		)));
 
 		http_response_code(intval($http_response_header.split(' ')[1]));
+		header('Content-Type: application/json');
 		echo $mojang;
 	}
 	else {
 		http_response_code(403);
+		header('Content-Type: application/json');
 		echo json_encode(array(
 			'error' => 'ForbiddenOperationException',
 			'errorMessage' => 'Invalid credentials. Invalid username or password.'
@@ -66,6 +70,7 @@ else if(isset($json['username']) && isset($json['password']) && isset($json['cli
 }
 else {
 	http_response_code(403);
+	header('Content-Type: application/json');
 	echo json_encode(array(
 		'error' => 'ForbiddenOperationException',
 		'errorMessage' => 'Invalid credentials. Invalid username or password.'

@@ -6,6 +6,7 @@ $json = json_decode($input, true);
 
 if($json === NULL) {
 	http_response_code(400);
+	header('Content-Type: application/json');
 	echo json_encode(array(
 		'error' => 'JsonParseException',
 		'errorMessage' => 'Error parsing JSON.'
@@ -35,10 +36,13 @@ else if(isset($json['username']) && isset($json['password'])) {
 		)));
 
 		http_response_code(intval($http_response_header.split(' ')[1]));
+		if(http_response_code() !== 204)
+			header('Content-Type: application/json');
 		echo $mojang;
 	}
 	else {
 		http_response_code(403);
+		header('Content-Type: application/json');
 		echo json_encode(array(
 			'error' => 'ForbiddenOperationException',
 			'errorMessage' => 'Invalid credentials. Invalid username or password.'
@@ -49,6 +53,7 @@ else if(isset($json['username']) && isset($json['password'])) {
 }
 else {
 	http_response_code(403);
+	header('Content-Type: application/json');
 	echo json_encode(array(
 		'error' => 'ForbiddenOperationException',
 		'errorMessage' => 'Invalid credentials. Invalid username or password.'

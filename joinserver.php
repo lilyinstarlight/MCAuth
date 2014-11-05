@@ -2,6 +2,8 @@
 require 'config.php';
 
 if(isset($_REQUEST['user']) && isset($_REQUEST['sessionId']) && isset($_REQUEST['serverId'])) {
+	header('Content-Type: text/plain');
+
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$session = explode(':', $_REQUEST['sessionId'], 3);

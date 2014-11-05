@@ -6,6 +6,7 @@ $json = json_decode($input, true);
 
 if($json === NULL) {
 	http_response_code(400);
+	header('Content-Type: application/json');
 	echo json_encode(array(
 		'error' => 'JsonParseException',
 		'errorMessage' => 'Error parsing JSON.'
@@ -38,6 +39,7 @@ else if(isset($json['accessToken'])) {
 			);
 		}
 
+		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
 	else if($CONFIG['onlineauth']) {
@@ -52,10 +54,12 @@ else if(isset($json['accessToken'])) {
 		)));
 
 		http_response_code(intval($http_response_header.split(' ')[1]));
+		header('Content-Type: application/json');
 		echo $mojang;
 	}
 	else {
 		http_response_code(403);
+		header('Content-Type: application/json');
 		echo json_encode(array(
 			'error' => 'ForbiddenOperationException',
 			'errorMessage' => 'Invalid token.'
@@ -66,6 +70,7 @@ else if(isset($json['accessToken'])) {
 }
 else {
 	http_response_code(400);
+	header('Content-Type: application/json');
 	echo json_encode(array(
 		'error' => 'IllegalArgumentException',
 		'errorMessage' => 'Access Token can not be null or empty.'
