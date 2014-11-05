@@ -18,19 +18,24 @@ else if(isset($json['accessToken'])) {
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $mysql->real_escape_string($json['accessToken']) . '"');
 	if($result !== FALSE) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
+		$result->close();
 
-		do {
-			$result->close();
+		while(TRUE) {
 			$access_token = dechex(rand(268435456, 4294967295));
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $access_token . '"');
+
+			if($result === FALSE)
+				break;
+
+			$result->close();
 		}
-		while($result !== FALSE);
+
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '" WHERE id=' . $array['id']);
 
 		$response = array(
 			'accessToken' => $access_token,
-			'clientToken' => $json['clientToken']
+			'clientToken' => $array['client_token']
 		);
 
 		if(isset($json['requestUser']) && $json['requestUser'] === TRUE) {

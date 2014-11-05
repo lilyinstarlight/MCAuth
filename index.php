@@ -9,13 +9,17 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '" AND password="' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '"');
 	if($result !== FALSE) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
+		$result->close();
 
-		do {
-			$result->close();
+		while(TRUE) {
 			$id = dechex(rand(268435456, 4294967295));
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE session="' . $id . '"');
+
+			if($result === FALSE)
+				break;
+
+			$result->close();
 		}
-		while($result !== FALSE);
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $id . '" WHERE id=' . $array['id']);
 
