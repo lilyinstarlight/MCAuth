@@ -18,7 +18,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 		$version = 0;
 		if(empty($CONFIG['version'])) {
 			$rss = @file_get_contents('http://mcupdate.tumblr.com/rss');
-			preg_match('/<item>.*<title>Minecraft [0-9]+\\.[0-9]+.*<\\/title>.*<pubDate>(.*)<\\/pubDate>.*?<\\/item>/', $rss, $matches);
+			preg_match('/<item>.*?<title>Minecraft [0-9]+\\.[0-9]+.*?<\\/title>.*?<pubDate>(.*?)<\\/pubDate>.*?<\\/item>/s', $rss, $matches);
 			$version = @strtotime($matches[1]) * 1000;
 		}
 		else {
