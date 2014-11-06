@@ -9,6 +9,7 @@
 <p>
 <?php
 require 'config.php';
+require 'common.php';
 
 if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['passwordconfirm'])) {
 	$error = false;
@@ -51,7 +52,9 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['
 	$result->free();
 
 	if(!$error) {
-		$result = $mysql->query('INSERT INTO ' . $CONFIG['table'] . ' (username, password) VALUES("' . $mysql->real_escape_string($_REQUEST['user']) . '", "' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '")');
+		$id = gen_uniq($mysql, $CONFIG['table'], 'id');
+
+		$result = $mysql->query('INSERT INTO ' . $CONFIG['table'] . ' (id, username, password) VALUES("' . $id . '", "' . $mysql->real_escape_string($_REQUEST['user']) . '", "' . $mysql->real_escape_string(hash('sha256', $_REQUEST['password'])) . '")');
 		if($result === true) {
 			if(file_exists($_FILES['skin']['tmp_name'])) {
 				move_uploaded_file($_FILES['skin']['tmp_name'], 'skins/' . addslashes($_REQUEST['user']) . '.png');

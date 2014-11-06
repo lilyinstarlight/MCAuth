@@ -1,5 +1,6 @@
 <?php
 require 'config.php';
+require 'common.php';
 
 if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 	header('Content-Type: text/plain');
@@ -10,14 +11,9 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 	if($result->num_rows === 1) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
 
-		do {
-			$result->free();
-			$access_token = dechex(rand(268435456, 4294967295));
-			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $access_token . '"');
-		}
-		while($result->num_rows !== 0);
+		$session = gen_uniq($mysql, $CONFIG['table'], 'session');
 
-		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $id . '" WHERE id=' . $array['id']);
+		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $session . '" WHERE id="' . $array['id'] . '"');
 
 		if(empty($CONFIG['version'])) {
 			$rss = @file_get_contents('http://mcupdate.tumblr.com/rss');
@@ -28,7 +24,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 			$version = strtotime($CONFIG['version']) * 1000;
 		}
 
-		echo $version . ':' . 'deprecated' . ':' . $array['username'] . ':' . $id . ':';
+		echo $version . ':' . 'deprecated' . ':' . $array['username'] . ':' . $session . ':';
 	}
 	else if($CONFIG['onlineauth'] && isset($_REQUEST['version'])) {
 		echo file_get_contents('http://login.minecraft.net/?user=' . urlencode($_REQUEST['user']) . '&password=' . urlencode($_REQUEST['password']) . '&version=' . $_REQUEST['version']);

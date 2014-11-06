@@ -1,5 +1,6 @@
 <?php
 require 'config.php';
+require 'common.php';
 
 $input = file_get_contents('php://input');
 $json = json_decode($input, true);
@@ -19,12 +20,7 @@ else if(isset($json['username']) && isset($json['password'])) {
 	if($result->num_rows === 1) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
 
-		do {
-			$result->free();
-			$access_token = dechex(rand(268435456, 4294967295));
-			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE access_token="' . $access_token . '"');
-		}
-		while($result->num_rows !== 0);
+		$access_token = gen_uniq($mysql, $CONFIG['table'], 'access_token');
 
 		if(isset($json['clientToken'])) {
 			$client_token = $json['clientToken'];
@@ -38,7 +34,7 @@ else if(isset($json['username']) && isset($json['password'])) {
 			while($result->num_rows !== 0);
 		}
 
-		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '", client_token="' . $mysql->real_escape_string($client_token) . '" WHERE id=' . $array['id']);
+		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '", client_token="' . $mysql->real_escape_string($client_token) . '" WHERE id="' . $array['id'] . '"');
 
 		$response = array(
 			'accessToken' => $access_token,

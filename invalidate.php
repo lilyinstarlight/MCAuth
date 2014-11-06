@@ -19,7 +19,7 @@ else if(isset($json['accessToken'])) {
 	if($result->num_rows === 1) {
 		$array = $result->fetch_array(MYSQLI_ASSOC);
 
-		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="", client_token="" WHERE id=' . $array['id']);
+		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="", client_token="" WHERE id="' . $array['id'] . '"');
 
 		http_response_code(204);
 	}
