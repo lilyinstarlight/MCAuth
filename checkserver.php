@@ -11,7 +11,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['serverId'])) {
 		echo 'YES';
 	}
 	else if($CONFIG['onlineauth']) {
-		echo file_get_contents('http://session.minecraft.net/game/checkserver.jsp?user=' . urlencode($_REQUEST['user']) . '&serverId=' . $_REQUEST['serverId']);
+		echo file_get_contents('http://session.minecraft.net/game/checkserver.jsp?user=' . urlencode($_REQUEST['user']) . '&serverId=' . urlencode($_REQUEST['serverId']));
 	}
 	else {
 		echo 'NO';
