@@ -22,19 +22,12 @@ else if(isset($json['username']) && isset($json['password'])) {
 
 		$access_token = gen_uniq($mysql, $CONFIG['table'], 'access_token');
 
-		if(isset($json['clientToken'])) {
-			$client_token = $json['clientToken'];
-		}
-		else {
-			do {
-				$result->free();
-				$client_token = dechex(rand(268435456, 4294967295));
-				$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE client_token="' . $client_token . '"');
-			}
-			while($result->num_rows !== 0);
-		}
+		if(isset($json['clientToken']))
+			$client_token = $mysql->real_escape_string($json['clientToken']);
+		else
+			$client_token = gen_uniq($mysql, $CONFIG['table'], 'client_token');
 
-		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '", client_token="' . $mysql->real_escape_string($client_token) . '" WHERE id="' . $array['id'] . '"');
+		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET access_token="' . $access_token . '", client_token="' . $client_token . '" WHERE id="' . $array['id'] . '"');
 
 		$response = array(
 			'accessToken' => $access_token,
