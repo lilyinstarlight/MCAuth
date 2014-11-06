@@ -46,6 +46,16 @@ else if(isset($json['username']) && isset($json['password'])) {
 		);
 
 		if(isset($json['requestUser']) && $json['requestUser'] === true) {
+			$response['selectedProfile'] = array(
+				'id' => $array['id'],
+				'name' => $array['username']
+			);
+			$response['availableProfiles'] = array(
+				array(
+					'id' => $array['id'],
+					'name' => $array['username']
+				)
+			);
 			$response['user'] = array(
 				'id' => $array['id']
 			);

@@ -34,6 +34,10 @@ else if(isset($json['accessToken'])) {
 		);
 
 		if(isset($json['requestUser']) && $json['requestUser'] === true) {
+			$response['selectedProfile'] = array(
+				'id' => $array['id'],
+				'name' => $array['username']
+			);
 			$response['user'] = array(
 				'id' => $array['id']
 			);
