@@ -44,7 +44,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password']) && isset($_REQUEST['
 	$mysql = new mysqli($CONFIG['host'], $CONFIG['user'], $CONFIG['pass'], $CONFIG['database']);
 
 	$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['user']) . '"');
-	if($result->num_rows === 1) {
+	if($result->num_rows !== 0) {
 		$error = true;
 		echo '<span class="failure">Error: Username already registered</span><br />';
 	}

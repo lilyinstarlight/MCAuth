@@ -54,7 +54,7 @@ if(isset($_SESSION['user'])) {
 
 		if($CONFIG['changeuser'] && !empty($_REQUEST['newuser'])) {
 			$result = $mysql->query('SELECT * FROM ' . $CONFIG['table'] . ' WHERE username="' . $mysql->real_escape_string($_REQUEST['newuser']) . '"');
-			if($result->num_rows === 1) {
+			if($result->num_rows !== 0) {
 				$error = true;
 				echo '<span class="failure">Error: Username already registered</span><br />';
 			}
