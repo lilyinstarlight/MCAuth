@@ -15,7 +15,7 @@ if(isset($_REQUEST['user']) && isset($_REQUEST['password'])) {
 
 		$mysql->query('UPDATE ' . $CONFIG['table'] . ' SET session="' . $session . '" WHERE id="' . $array['id'] . '"');
 
-		$version = 0
+		$version = 0;
 		if(empty($CONFIG['version'])) {
 			$rss = @file_get_contents('http://mcupdate.tumblr.com/rss');
 			preg_match('/<item>.*<title>Minecraft [0-9]+\\.[0-9]+.*<\\/title>.*<pubDate>(.*)<\\/pubDate>.*?<\\/item>/', $rss, $match);
