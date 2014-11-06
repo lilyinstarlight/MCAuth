@@ -13,7 +13,7 @@ $CONFIG = array(
 	'database'	=> 'database',
 
 	//Table containing the login information
-	//Table format: id (char, 32)   username (varchar, 31)   password (char, 64)   access_token (char, 8)   client_token (varchar, 36)   session (char, 8)   server (varchar, 41)
+	//Table format: id (char, 32)   username (varchar, 31)   password (char, 64)   access_token (char, 32)   client_token (varchar, 36)   session (char, 32)   server (varchar, 41)
 	'table'		=> 'minecraft',
 
 	//Message to display when not accessed as an authenticator; can use HTML
